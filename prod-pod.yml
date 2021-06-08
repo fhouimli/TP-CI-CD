@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: prod-pod
+  labels:
+    app: prod
+spec:
+  containers:
+    - name: prod
+      image: fhouimli/my-rep:v2.0
