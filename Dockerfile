@@ -6,4 +6,4 @@ RUN apk update
 RUN apk add git
 RUN git clone https://github.com/vanessakovalsky/example-python.git
 
-CMD ["python", "./example-python/tree/master/vagrant/src/main.py"]
+CMD ["python", "example-python/vagrant/src/main.py"]
