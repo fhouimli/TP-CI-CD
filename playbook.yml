@@ -1,0 +1,40 @@
+-
+  name: Deploy to ubuntus
+  hosts: ubuntu
+  vars:
+    - TARGET_DIR: /home/jenkins/myproject/
+
+  tasks:
+    - name: Create build directory
+      file:
+        path: "{{TARGET_DIR}}"
+        state: directory
+
+    - name: Copy Dockerfile + app files
+      copy:
+        src: ./{{item}}
+        dest: "{{TARGET_DIR}}"
+      with_items:
+        - 'Dockerfile'
+        - 'main.py'
+
+    - name: Build docker image
+      docker_image:
+        path: "{{TARGET_DIR}}"
+        name: myproject
+        tag: v1
+
+    - name: Run containers
+      tags: run_containers
+      docker_container:
+        name: "{{item.name}}"
+        image: myproject:v1
+        state: started
+        forcekill: yes
+        recreate: yes
+        ports:
+          - "{{item.port}}:3000"
+      with_items:
+        - { name: dev-pod, port: 30011 }
+        - { name: test-pod, port: 30012 }
+        - { name: prod-pod, port: 30010 }
